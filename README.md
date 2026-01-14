@@ -1,3 +1,57 @@
+# Install on Raspberry Pi 5
+
+Follow prophesee documentation at: [Compiling OpenEB on Linux](https://docs.prophesee.ai/4.6.2/installation/linux_openeb.html)
+
+## Install Dependencies
+
+```bash
+sudo apt update
+sudo apt -y install apt-utils build-essential wget unzip curl git cmake
+sudo apt -y install libopencv-dev libboost-all-dev libusb-1.0-0-dev libprotobuf-dev protobuf-compiler
+sudo apt -y install libhdf5-dev hdf5-tools libglew-dev libglfw3-dev libcanberra-gtk3-module ffmpeg
+```
+
+### Install python libraries
+
+Use python virtual environment like `pyenv`, `conda env` to install
+
+```python
+pip install pip --upgrade
+pip install "opencv-python==4.5.5.64" "sk-video==1.1.10" "fire==0.4.0" "numpy==1.23.4" "h5py==3.7.0" pandas scipy
+pip install matplotlib "ipywidgets==7.6.5" pytest command_runner
+```
+
+## Install `pybind11`
+
+```bash
+wget https://github.com/pybind/pybind11/archive/v2.13.6.zip
+unzip v2.13.6.zip
+cd pybind11-2.13.6
+mkdir build && cd build
+cmake .. -DPYBIND11_TEST=OFF
+cmake --build .
+sudo cmake --build . --target install
+```
+
+## Compilation
+
+```bash
+git clone https://github.com/atdtu/openeb.git
+cd openeb
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+cmake --build . --config Release -- -j `nproc`
+# deploy to the system path
+sudo cmake --build . --target install
+```
+
+update `LD_LIBRARY_PATH` and `HDF5_PLUGIN_PATH` to `~/.bashrc`
+
+```bash
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+export HDF5_PLUGIN_PATH=$HDF5_PLUGIN_PATH:/usr/local/lib/hdf5/plugin
+```
+
 # OpenEB
 
 OpenEB is the open source project associated with [Metavision SDK](https://docs.prophesee.ai/stable/index.html)
