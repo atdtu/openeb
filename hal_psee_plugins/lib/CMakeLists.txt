@@ -6,6 +6,8 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
 # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
+#
+# Copyright (C) 2025, IDS Imaging Development Systems GmbH.
 
 # Compile code that is used multiple times in object libraries :
 
@@ -160,12 +162,14 @@ set(hal_psee_plugins_target_file_list)
 
 set(plugin_list
     hal_plugin_prophesee
+    ueye_evs_hal_plugin
 )
 
 if(POLICY CMP0095)
     # Don't escape RPATH content
     cmake_policy(SET CMP0095 OLD)
 endif (POLICY CMP0095)
+
 
 foreach(plugin ${plugin_list})
     # Declare the plugin as a shared library
@@ -184,6 +188,7 @@ foreach(plugin ${plugin_list})
         PUBLIC
             metavision_hal
     )
+
 
     target_include_directories(${plugin}
         PRIVATE
@@ -237,6 +242,21 @@ foreach(object ${lib_common_obj_list})
         PRIVATE
             ${object}
     )
+endforeach()
+
+set(my_plugin_list ueye_evs_hal_plugin)
+foreach(my_plugin ${my_plugin_list})
+    foreach(object ${lib_obj_list})
+        # Linkage with generic hal plugin object
+        target_sources(${my_plugin}
+            PRIVATE
+            $<TARGET_OBJECTS:${object}>
+        )
+        target_link_libraries(${my_plugin}
+            PRIVATE
+            ${object}
+        )
+    endforeach()
 endforeach()
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/licensing/LICENSE_METAVISION_SDK")
