@@ -1,0 +1,1 @@
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", ATTR{idVendor}=="1409", ATTR{idProduct}=="8e00", MODE="0666", TAG+="cyusb_dev"

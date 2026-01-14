@@ -13,6 +13,7 @@ if((NOT WIN32) AND (NOT APPLE) AND (NOT ANDROID))
     set(rules
         ${CMAKE_CURRENT_SOURCE_DIR}/88-cyusb.rules
         ${CMAKE_CURRENT_SOURCE_DIR}/99-evkv2.rules
+        ${CMAKE_CURRENT_SOURCE_DIR}/77-udeye.rules
     )
     foreach(rule ${rules})
         install(FILES ${rule}
